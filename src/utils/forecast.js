@@ -1,16 +1,19 @@
-const request = require('request') 
+const request = require('request')
 
-const forecast = (latitude, longtitude, callback) => {
-    const url = 'http://api.weatherstack.com/current?access_key=8730c55865a7a9d55b867afc5925d653&query=' + latitude + ',' + longtitude
-    request({url, json: true }, (error, {body} ) => {
+const forecast = (latitude, longitude, callback) => {
+    const url = 'http://api.weatherstack.com/current?access_key=8730c55865a7a9d55b867afc5925d653&query='+ latitude + ', '+ longitude 
+
+    request({url: url, json: true }, (error, response) => {
         if (error) {
-            callback('Unable to connect ot weather service!', undefined)
-        } else if(body.error) {
-            callback('Unable to find location', undefined) 
-        } else {
-            callback(undefined, body.current.weather_descriptions[0] + '. It is currently ' + body.current.temperature + ' degres out. It is feel like ' + body.current.feelslike + ' degress out.' )
-        }   
+            callback('Unable to connect to weather services!', undefined)
+        } else if (response.body.error) {
+            callback('Unable to find location', undefined)
+        }else {
+            callback(undefined, 
+                response.body.current.weather_descriptions[0] + '. It is currently ' + response.body.current.temperature + 
+                ' degres out. It is feel like ' + response.body.current.feelslike + ' degress out. The humidity is ' + response.body.current.humidity + '%.' )
+        }
     })
 }
 
-module.exports = forecast; 
+module.exports = forecast;
